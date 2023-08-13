@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+  <div class="account-box" id="login">
+    <h2>Login</h2>
+    <form>
+      <div class="user-box">
+        <input id="user" type="text" name="" required="" placeholder="Email"> 
+      </div>
+      <div class="user-box">
+        <input id="password" type="password" name="" required="" placeholder="Password">
+      </div>
+      <div class="selector">
+        <a class="account" href="../login/signup.html">Bạn chưa có tài khoản?</a>
+        <button type="button" id="btn"  class="btn">Submit</button>
+      </div>
+    </form>
+  </div>
+  <!-- <script src="/spckJSAOk/spckJSA/uh/js/login.js"></script> -->
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+  import { getDatabase, ref, set, child, get } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js"
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyCe-2goYCWYk8kUg1be4D3Cv5KGMLxBD-c",
+    authDomain: "last-acad8.firebaseapp.com",
+    projectId: "last-acad8",
+    storageBucket: "last-acad8.appspot.com",
+    messagingSenderId: "756064580713",
+    appId: "1:756064580713:web:7d11a1d48a13dc20409ef8"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+
+
+  
+  const db = getDatabase();
+
+  // Initialize Firebase
+    
+    const username = document.getElementById('user');
+    const pass = document.getElementById('password');
+    const submit = document.getElementById('btn')
+
+    function authenUser(){
+        const dbRef = ref(db);
+        get(child(dbRef, "User/" + username.value)).then((result) => {
+            if (result.exists()){
+                let dbpass = decPass(result.val().passDB);
+                if (dbpass == pass.value){
+                    login(result.val());
+
+                }else {
+                    alert('Incorrect')
+                }
+            } else {
+                alert('Incorrect user')
+            }
+
+        })
+
+    }
+    
+    function decPass(firePass) {
+        var encryptionPass = CryptoJS.AES.decrypt(firePass, pass.value)
+        return encryptionPass.toString(CryptoJS.enc.Utf8)
+    }
+
+    function login(user){
+        window.location = "logout.html"
+    }
+
+    submit.addEventListener('click', authenUser)
+</script>
+</body>
+</html>
